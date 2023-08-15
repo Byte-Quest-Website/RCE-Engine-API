@@ -1,5 +1,5 @@
-import helloWorldRouter from "./helloWorld";
+import runCodeRouter from "./runcode";
 
-const routes = [helloWorldRouter];
+const routes = [runCodeRouter];
 
 export default routes;
