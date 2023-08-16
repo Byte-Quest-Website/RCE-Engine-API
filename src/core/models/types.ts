@@ -18,3 +18,12 @@ export const TestCodeJobValidator = z.object({
     code: z.string(),
     problem_id: z.string().uuid(),
 });
+
+type Test = [any[], any];
+
+export type TestCodeData = {
+    function_name: string;
+    time_limit: number;
+    memory_limit: number;
+    tests: Test[];
+};
