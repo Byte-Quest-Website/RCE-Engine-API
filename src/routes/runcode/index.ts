@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { v4 as uuidv4 } from "uuid";
+import { createHash } from "crypto";
 import { EventEmitter } from "events";
 import { connect, Channel } from "amqplib";
 import { validateRequest } from "zod-express-middleware";
 
+import { redis } from "../../core/db/connections";
+import { cacheRunCode } from "../../core/helpers/middleware";
 import { RunCodeJobValidator } from "../../core/models/types";
 
 const runCodeRouter = Router();
@@ -51,6 +54,7 @@ async function getConnection() {
 runCodeRouter.post(
     "/runcode",
     validateRequest({ body: RunCodeJobValidator }),
+    cacheRunCode,
     async (req, res) => {
         const data = { jobID: uuidv4(), replyBack: true, ...req.body };
         const correlationId = uuidv4();
@@ -80,11 +84,20 @@ runCodeRouter.post(
                 responsePromise,
                 timeoutPromise,
             ]);
-            res.send({
+
+            const key = createHash("sha256")
+                .update(JSON.stringify(req.body))
+                .digest("hex");
+
+            const returnData = {
                 success: true,
                 detail: "worker response recieved successfully",
                 data: JSON.parse(response),
-            });
+            };
+
+            redis.set(key, JSON.stringify(returnData));
+
+            res.send(returnData);
         } catch (error) {
             res.status(500).send({
                 success: false,

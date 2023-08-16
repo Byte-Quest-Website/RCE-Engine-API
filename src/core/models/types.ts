@@ -11,6 +11,7 @@ export const RunCodeJobValidator = z.object({
     language: SupportedRunCodeLanguages,
     code: z.string(),
     input: z.string(),
+    use_cache: z.boolean().default(true),
     enviromentVariables: z.record(z.string(), z.string()).default({}),
 });
 
