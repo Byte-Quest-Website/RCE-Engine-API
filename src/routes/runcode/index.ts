@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 import { connect, Channel } from "amqplib";
 import { validateRequest } from "zod-express-middleware";
 
-import { RunCodeJobValidator } from "../../core/helpers/types";
+import { RunCodeJobValidator } from "../../core/models/types";
 
 const runCodeRouter = Router();
 
