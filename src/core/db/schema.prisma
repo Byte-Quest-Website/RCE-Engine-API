@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Job {
-  id          String     @id @unique
+  id          String     @id @default(uuid())
   completed   Boolean    @default(false)
   createdAt   DateTime   @default(now()) @map("created_at")
   completedAt DateTime?  @map("completed_at")
