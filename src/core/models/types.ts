@@ -19,11 +19,11 @@ export const TestCodeJobValidator = z.object({
     problem_id: z.string().uuid(),
 });
 
-type Test = [any[], any];
+export const TestCodeDataValidator = z.object({
+    function_name: z.string(),
+    time_limit: z.number(),
+    memory_limit: z.number(),
+    tests: z.tuple([z.any().array(), z.any()]).array(),
+});
 
-export type TestCodeData = {
-    function_name: string;
-    time_limit: number;
-    memory_limit: number;
-    tests: Test[];
-};
+export type TestCodeData = z.infer<typeof TestCodeDataValidator>;
