@@ -49,17 +49,21 @@ function main() {
     const PORT = 8443;
     const server = http.createServer(getExpressApp(routes));
 
-    server.listen(PORT, () =>
-        console.log(`Server Started!\nListening on http://localhost:${PORT}`)
-    );
-
     if (process.env.PROD === "true") {
         const httpsServer = https.createServer(
             getCertificates(),
             getExpressApp(routes)
         );
-        httpsServer.listen(PORT, "0.0.0.0", () =>
-            console.log(`Server Started!\nListening on https://0.0.0.0:${PORT}`)
+        httpsServer.listen(PORT, () =>
+            console.log(
+                `Server Started!\nListening on https://localhost:${PORT}`
+            )
+        );
+    } else {
+        server.listen(PORT, () =>
+            console.log(
+                `Server Started!\nListening on http://localhost:${PORT}`
+            )
         );
     }
 }
