@@ -1,5 +1,9 @@
+import "dotenv/config";
 import http from "http";
 import cors from "cors";
+import https from "https";
+import { join } from "path";
+import { readFileSync } from "fs";
 import rateLimit from "express-rate-limit";
 import express, { type Router } from "express";
 
@@ -32,6 +36,15 @@ function getExpressApp(routes: Router[]) {
     return app;
 }
 
+function getCertificates(): { key: string; cert: string } {
+    const CERT_DIR = join(__dirname, "..", "certs/");
+
+    const certificate = readFileSync(join(CERT_DIR, "cert.pem")).toString();
+    const privateKey = readFileSync(join(CERT_DIR, "key.pem")).toString();
+
+    return { key: privateKey, cert: certificate };
+}
+
 function main() {
     const PORT = 8443;
     const server = http.createServer(getExpressApp(routes));
@@ -39,6 +52,16 @@ function main() {
     server.listen(PORT, () =>
         console.log(`Server Started!\nListening on http://localhost:${PORT}`)
     );
+
+    if (process.env.PROD === "true") {
+        const httpsServer = https.createServer(
+            getCertificates(),
+            getExpressApp(routes)
+        );
+        httpsServer.listen(PORT, "0.0.0.0", () =>
+            console.log(`Server Started!\nListening on https://0.0.0.0:${PORT}`)
+        );
+    }
 }
 
 main();
