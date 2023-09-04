@@ -43,6 +43,11 @@ testCodeRouter.post(
             });
         }
 
+        if (req.body.mode === "run") {
+            // crop to only first 10 elements
+            data.tests = data.tests.slice(0, 10);
+        }
+
         let msg = JSON.stringify({
             jobID: jobID,
             code: req.body.code,

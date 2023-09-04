@@ -18,6 +18,7 @@ export const RunCodeJobValidator = z.object({
 export const TestCodeJobValidator = z.object({
     code: z.string(),
     problem_id: z.string().uuid(),
+    mode: z.union([z.literal("run"), z.literal("submit")]).default("submit"),
 });
 
 export const TestCodeDataValidator = z.object({
