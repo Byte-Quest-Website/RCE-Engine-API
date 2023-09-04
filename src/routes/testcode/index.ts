@@ -38,7 +38,7 @@ testCodeRouter.post(
             data = await fetchProblem(req.body.problem_id);
         } catch {
             return res.status(404).send({
-                success: true,
+                success: false,
                 detail: "failed to find problem with given id",
             });
         }
