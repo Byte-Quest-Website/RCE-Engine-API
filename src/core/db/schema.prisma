@@ -44,7 +44,7 @@ model Problem {
 
 enum Difficulty {
   EASY
-  MEDUIUM
+  MEDIUM
   HARD
 }
 
